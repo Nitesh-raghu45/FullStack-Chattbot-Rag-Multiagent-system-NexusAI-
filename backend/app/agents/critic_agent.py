@@ -4,8 +4,7 @@ from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
 from app.config.settings import settings
 from app.logger.logger import logger
-import json
-import re
+from app.utils.helpers import parse_llm_json
 
 
 # ── LLM ───────────────────────────────────────────────────────────────────
@@ -92,7 +91,15 @@ def run_critic_agent(research_output: dict) -> dict:
     try:
         response  = llm.invoke(messages)
         raw_text  = response.content.strip()
-        critique  = _parse_json(raw_text)
+        fallback  = {
+            "scores": {"accuracy": 0, "completeness": 0, "clarity": 0, "source_usage": 0},
+            "overall_score": 0.0,
+            "verdict":       "PARSE_ERROR",
+            "strengths":     [],
+            "weaknesses":    ["Could not parse critic response."],
+            "feedback":      "Raw LLM output could not be parsed as JSON.",
+        }
+        critique  = parse_llm_json(raw_text, fallback=fallback)
         logger.info(f"[critic_agent] Verdict: {critique.get('verdict')} | "
                     f"Score: {critique.get('overall_score')}")
     except Exception as e:
@@ -107,30 +114,3 @@ def run_critic_agent(research_output: dict) -> dict:
         "critique": critique,
         "passed":   passed,
     }
-
-
-# ── Helper ─────────────────────────────────────────────────────────────────
-def _parse_json(text: str) -> dict:
-    """
-    Safely parse the LLM's JSON response.
-    Strips markdown code fences if present (e.g. ```json ... ```).
-    """
-    # Remove markdown fences like ```json ... ``` or ``` ... ```
-    cleaned = re.sub(r"```(?:json)?", "", text).replace("```", "").strip()
-
-    try:
-        return json.loads(cleaned)
-    except json.JSONDecodeError as e:
-        logger.error(f"[critic_agent] JSON parse failed: {e}\nRaw: {cleaned}")
-        # Return a safe fallback so the API doesn't crash
-        return {
-            "scores": {
-                "accuracy": 0, "completeness": 0,
-                "clarity": 0,  "source_usage": 0,
-            },
-            "overall_score": 0.0,
-            "verdict":       "PARSE_ERROR",
-            "strengths":     [],
-            "weaknesses":    ["Could not parse critic response."],
-            "feedback":      "Raw LLM output could not be parsed as JSON.",
-        }

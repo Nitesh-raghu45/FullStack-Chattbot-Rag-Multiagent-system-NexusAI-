@@ -5,6 +5,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.messages import HumanMessage, SystemMessage
 from app.config.settings import settings
 from app.logger.logger import logger
+from app.utils.helpers import truncate_text
 
 
 # ── Tools ──────────────────────────────────────────────────────────────────
@@ -113,6 +114,6 @@ def _format_results(results: list[dict]) -> str:
         lines.append(
             f"[{i}] {title}\n"
             f"     URL: {url}\n"
-            f"     Snippet: {content[:400]}..."   # truncate very long snippets
+            f"     Snippet: {truncate_text(content, max_chars=400)}"
         )
     return "\n\n".join(lines)

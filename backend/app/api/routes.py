@@ -107,27 +107,28 @@ def rag_stream(data: RAGRequest):
 async def rag_ingest(file: UploadFile = File(...)):
     """
     Upload and ingest a document (PDF / TXT / DOCX) into the FAISS vectorstore.
-    The file is saved to data/raw/ then chunked + embedded.
     """
-    import os, shutil
+    import shutil
     from pathlib import Path
+    from app.utils.helpers import safe_filename, validate_file_extension, ensure_dir
 
-    RAW_DIR = Path("data/raw")
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        validate_file_extension(file.filename)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-    file_path = str(RAW_DIR / file.filename)
+    RAW_DIR   = ensure_dir("data/raw")
+    filename  = safe_filename(file.filename)
+    file_path = str(Path(RAW_DIR) / filename)
 
-    # Save uploaded file to disk
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    logger.info(f"[routes] /rag/ingest — saved {file.filename}")
+    logger.info(f"[routes] /rag/ingest — saved {filename}")
 
     try:
         result = rag_ingest_file(file_path)
         return result
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"[routes] /rag/ingest error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

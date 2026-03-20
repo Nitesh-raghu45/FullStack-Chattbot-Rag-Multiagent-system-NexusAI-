@@ -13,3 +13,8 @@ docx2txt
 python-multipart
 python-dotenv
 tavily-python
+
+# testing
+pytest
+pytest-asyncio
+httpx
