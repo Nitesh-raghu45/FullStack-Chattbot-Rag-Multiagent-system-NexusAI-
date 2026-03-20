@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+langchain
+langgraph
+faiss-cpu
+python-dotenv
+sqlite3
