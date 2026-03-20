@@ -1,4 +1,3 @@
-# Research agent
 # backend/app/agents/research_agent.py
 
 from langchain_groq import ChatGroq

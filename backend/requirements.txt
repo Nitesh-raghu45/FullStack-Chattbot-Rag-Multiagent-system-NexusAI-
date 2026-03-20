@@ -3,6 +3,13 @@ uvicorn[standard]
 pydantic
 langchain
 langchain-groq
+langchain-community
+langchain-huggingface
 langgraph
 faiss-cpu
+sentence-transformers
+pypdf
+docx2txt
+python-multipart
 python-dotenv
+tavily-python

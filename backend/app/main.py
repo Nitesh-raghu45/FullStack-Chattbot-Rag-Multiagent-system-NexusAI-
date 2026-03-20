@@ -5,15 +5,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
-from app.database.sqlite_db import init_db
 from app.logger.logger import logger
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup / shutdown events."""
-    logger.info("🚀 Starting up — initialising database...")
-    init_db()
+    logger.info("🚀 Starting up...")
+    # SqliteSaver creates its own tables automatically on first use —
+    # no manual init_db() call needed.
     yield
     logger.info("🛑 Shutting down.")
 
@@ -24,7 +23,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# ── CORS (allow React dev server) ─────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],

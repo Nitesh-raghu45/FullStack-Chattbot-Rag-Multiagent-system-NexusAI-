@@ -1,4 +1,3 @@
-# Critic agent
 # backend/app/agents/critic_agent.py
 
 from langchain_groq import ChatGroq

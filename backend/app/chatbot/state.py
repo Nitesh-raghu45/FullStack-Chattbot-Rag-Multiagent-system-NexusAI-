@@ -2,20 +2,14 @@
 
 from typing import Annotated
 from typing_extensions import TypedDict
+from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 
 
 class ChatState(TypedDict):
     """
-    Shared state that flows through every node in the graph.
-
-    Fields:
-        messages  : Full conversation history (HumanMessage / AIMessage).
-                    `add_messages` reducer appends instead of replacing.
-        summary   : Running summary injected as context when history is long.
-        session_id: Unique ID linking this graph run to a SQLite session row.
+    Minimal state — messages only.
+    LangGraph's SqliteSaver checkpointer handles
+    full history persistence automatically via thread_id in config.
     """
-
-    messages: Annotated[list, add_messages]
-    summary: str
-    session_id: str
+    messages: Annotated[list[BaseMessage], add_messages]

@@ -4,25 +4,31 @@ from pydantic import BaseModel, Field
 import uuid
 
 
+def _new_thread() -> str:
+    return str(uuid.uuid4())
+
+
+# ── Chat schemas ───────────────────────────────────────────────────────────
 class ChatRequest(BaseModel):
-    message: str    = Field(..., min_length=1, description="User message")
-    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()),
-                            description="Unique session ID (UUID)")
+    message:   str = Field(..., min_length=1, description="User message")
+    thread_id: str = Field(default_factory=_new_thread,
+                           description="Conversation thread ID (uuid)")
 
 
 class ChatResponse(BaseModel):
-    response:   str
-    session_id: str
+    response:  str
+    thread_id: str
 
 
+# ── RAG schemas ────────────────────────────────────────────────────────────
 class RAGRequest(BaseModel):
-    query:      str = Field(..., min_length=1)
-    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    query:     str = Field(..., min_length=1)
+    thread_id: str = Field(default_factory=_new_thread)
 
 
 class RAGResponse(BaseModel):
-    response:   str
-    session_id: str
+    response:  str
+    thread_id: str
 
 
 # ── Research / Critic schemas ──────────────────────────────────────────────

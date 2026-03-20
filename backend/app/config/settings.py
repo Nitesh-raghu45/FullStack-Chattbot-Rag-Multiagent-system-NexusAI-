@@ -12,7 +12,18 @@ class Settings:
 
     # Groq
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
-    GROQ_MODEL: str   = os.getenv("GROQ_MODEL", "llama3-8b-8192")
+    GROQ_MODEL: str   = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+
+    # SQLite — single file used by SqliteSaver checkpointer
+    SQLITE_DB_PATH: str = os.getenv("SQLITE_DB_PATH", "chatbot.db")
+
+    # RAG
+    FAISS_INDEX_PATH: str = os.getenv("FAISS_INDEX_PATH", "vectorstore/faiss_index")
+    EMBEDDING_MODEL:  str = os.getenv("EMBEDDING_MODEL",  "sentence-transformers/all-MiniLM-L6-v2")
+    RAG_TOP_K:        int = int(os.getenv("RAG_TOP_K", "4"))
+
+    # Tavily (web search for agents)
+    TAVILY_API_KEY: str = os.getenv("TAVILY_API_KEY", "")
 
     # Summarisation
     SUMMARY_THRESHOLD: int = 10     # messages before summary kicks in
