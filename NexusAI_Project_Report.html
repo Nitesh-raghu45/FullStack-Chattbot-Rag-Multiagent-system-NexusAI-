@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusAI — Project Details Report</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --primary:     #6c63ff;
+      --primary-dark:#4f46e5;
+      --accent:      #00d4aa;
+      --accent2:     #f97316;
+      --bg:          #0f0f1a;
+      --bg2:         #16162a;
+      --bg3:         #1e1e35;
+      --border:      #2e2e50;
+      --text:        #e2e8f0;
+      --muted:       #94a3b8;
+      --white:       #ffffff;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family:'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* ── COVER PAGE ─────────────────────────────────────────────── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, #0f0f1a 0%, #16162a 50%, #1a0f2e 100%);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+      top: -200px; right: -200px;
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,212,170,0.1) 0%, transparent 70%);
+      bottom: -100px; left: -100px;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.4);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      position: relative; z-index:1;
+    }
+
+    .cover h1 {
+      font-size: 56px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      position: relative; z-index:1;
+      letter-spacing: -1px;
+    }
+
+    .cover-subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      font-weight: 400;
+      max-width: 680px;
+      margin: 0 auto 48px;
+      position: relative; z-index:1;
+    }
+
+    .cover-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 60px;
+      position: relative; z-index:1;
+    }
+
+    .chip {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 800px;
+      position: relative; z-index:1;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .meta-card .num {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .meta-card .label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── SECTION LAYOUT ─────────────────────────────────────────── */
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 64px 48px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .section-num {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 12px;
+      margin-top: 28px;
+    }
+
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    p { color: var(--text); margin-bottom: 14px; }
+
+    /* ── FEATURE CARDS ──────────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .feature-card.purple::before { background: linear-gradient(90deg, #6c63ff, #a78bfa); }
+    .feature-card.teal::before   { background: linear-gradient(90deg, #00d4aa, #34d399); }
+    .feature-card.orange::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+    .feature-card.blue::before   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+
+    .feat-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .feat-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .feat-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TECH TABLE ─────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    thead tr {
+      background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(0,212,170,0.1));
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--white);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(46,46,80,0.5);
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    .tag {
+      display: inline-block;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    /* ── ARCHITECTURE ───────────────────────────────────────────── */
+    .arch-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--accent);
+      white-space: pre;
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+
+    /* ── FLOW STEPS ─────────────────────────────────────────────── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 24px 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-left: 2px solid var(--border);
+      padding-left: 24px;
+      margin-left: 16px;
+      position: relative;
+    }
+
+    .flow-step::before {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 22px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: 3px solid var(--bg);
+    }
+
+    .flow-step:last-child { border-left: 2px solid transparent; }
+
+    .flow-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      flex-shrink: 0;
+      padding-top: 2px;
+      min-width: 120px;
+    }
+
+    .flow-content { flex: 1; }
+
+    .flow-content strong { color: var(--white); font-size: 14px; }
+
+    .flow-content p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 0;
+      margin-top: 4px;
+    }
+
+    /* ── CODE SNIPPETS ──────────────────────────────────────────── */
+    .code-block {
+      background: #0d0d1a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    .code-block .file-label {
+      position: absolute;
+      top: 12px; right: 16px;
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kw  { color: #c792ea; }   /* keyword */
+    .fn  { color: #82aaff; }   /* function */
+    .str { color: #c3e88d; }   /* string */
+    .cm  { color: #546e7a; }   /* comment */
+    .nm  { color: #f78c6c; }   /* number */
+    .cl  { color: #ffcb6b; }   /* class */
+    .dc  { color: #00d4aa; }   /* decorator */
+    .op  { color: #89ddff; }   /* operator */
+
+    /* ── CONTRIBUTION ───────────────────────────────────────────── */
+    .contrib-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contrib-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .contrib-card h4 { margin-bottom: 12px; }
+
+    .contrib-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .contrib-item::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── ENDPOINTS TABLE ────────────────────────────────────────── */
+    .method-get    { color: #60a5fa; font-weight:600; }
+    .method-post   { color: #34d399; font-weight:600; }
+    .method-delete { color: #f87171; font-weight:600; }
+
+    /* ── DESIGN DECISIONS ───────────────────────────────────────── */
+    .decision-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .decision {
+      display: flex;
+      gap: 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      align-items: flex-start;
+    }
+
+    .decision-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .decision-text strong { color: var(--white); font-size: 14px; display: block; margin-bottom: 4px; }
+    .decision-text p { font-size: 12.5px; color: var(--muted); margin-bottom: 0; }
+
+    /* ── RESULTS ────────────────────────────────────────────────── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .result-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .result-num {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .result-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ── PAGE BREAK ─────────────────────────────────────────────── */
+    .page-break { page-break-before: always; }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── PRINT STYLES ───────────────────────────────────────────── */
+    @media print {
+      body { background: #0f0f1a !important; -webkit-print-color-adjust: exact; }
+      .cover { page-break-after: always; }
+      .section { padding: 40px 48px; }
+    }
+
+    /* ── CALLOUT ────────────────────────────────────────────────── */
+    .callout {
+      background: rgba(108,99,255,0.08);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+
+    .callout p { margin: 0; font-size: 13px; color: var(--muted); }
+    .callout strong { color: var(--white); }
+
+    ul { padding-left: 20px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; font-size: 13px; color: var(--muted); }
+    li strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ COVER PAGE ═══════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">⚡ Full-Stack AI Platform</div>
+
+  <h1>NexusAI</h1>
+
+  <p class="cover-subtitle">
+    A production-grade AI application featuring a memory-persistent chatbot,
+    document Q&amp;A (RAG), and a self-critiquing multi-agent research system
+  </p>
+
+  <div class="cover-chips">
+    <span class="chip">LangGraph</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">LangChain</span>
+    <span class="chip">Pinecone</span>
+    <span class="chip">Groq / LLaMA 3.1</span>
+    <span class="chip">React + Vite</span>
+    <span class="chip">SQLite</span>
+    <span class="chip">Tavily API</span>
+    <span class="chip">Docker</span>
+    <span class="chip">SSE Streaming</span>
+  </div>
+
+  <div class="cover-meta">
+    <div class="meta-card">
+      <div class="num">4</div>
+      <div class="label">AI Features</div>
+    </div>
+    <div class="meta-card">
+      <div class="num">37</div>
+      <div class="label">Pytest Tests</div>
+    </div>
+    <div class="meta-card">
+      <div class="num">8</div>
+      <div class="label">API Endpoints</div>
+    </div>
+    <div class="meta-card">
+      <div class="num">3</div>
+      <div class="label">AI Agents</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ SECTION 1: SUMMARY ═══════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Project Summary &amp; Contribution</h2>
+  </div>
+
+  <p>
+    <strong style="color:#fff">NexusAI</strong> is a full-stack, production-grade AI platform that integrates four
+    distinct AI capabilities into a single unified web application. The project demonstrates
+    end-to-end ownership — from LLM orchestration and vector retrieval to a streaming React UI,
+    containerised deployment, and a comprehensive automated test suite.
+  </p>
+
+  <div class="feature-grid">
+    <div class="feature-card purple">
+      <div class="feat-icon">💬</div>
+      <div class="feat-title">Memory Chatbot</div>
+      <div class="feat-desc">
+        Conversational AI with <strong>persistent memory across sessions</strong> using
+        LangGraph's <code>SqliteSaver</code> checkpointing and Groq LLaMA 3.1 8B.
+        Each thread identified by a UUID — history loads automatically.
+      </div>
+    </div>
+    <div class="feature-card teal">
+      <div class="feat-icon">📄</div>
+      <div class="feat-title">Document Q&amp;A (RAG)</div>
+      <div class="feat-desc">
+        Upload a PDF, TXT, or DOCX — get answers grounded in your document using
+        <strong>Pinecone vector search</strong> + HuggingFace local embeddings.
+        Zero hallucination: answers only from retrieved context.
+      </div>
+    </div>
+    <div class="feature-card orange">
+      <div class="feat-icon">🔍</div>
+      <div class="feat-title">Research Agent</div>
+      <div class="feat-desc">
+        Searches the web (Tavily API, top 5 results), synthesises a structured
+        summary with citations using Groq LLaMA — fully automated research pipeline.
+      </div>
+    </div>
+    <div class="feature-card blue">
+      <div class="feat-icon">🧠</div>
+      <div class="feat-title">Critic Agent</div>
+      <div class="feat-desc">
+        Scores every research output on <strong>4 criteria</strong> (Accuracy, Completeness,
+        Clarity, Source Usage — each /10). FAIL triggers automatic query refinement and retry.
+      </div>
+    </div>
+  </div>
+
+  <h3>My Contribution</h3>
+
+  <div class="contrib-grid">
+    <div class="contrib-card">
+      <h4>🔧 Backend</h4>
+      <div class="contrib-item">Designed entire FastAPI architecture</div>
+      <div class="contrib-item">Built LangGraph chatbot + SqliteSaver memory</div>
+      <div class="contrib-item">Implemented full RAG pipeline (ingest → retrieve → answer)</div>
+      <div class="contrib-item">Created Research + Critic multi-agent system</div>
+      <div class="contrib-item">Wrote 37 Pytest tests with mocks</div>
+      <div class="contrib-item">Set up SSE streaming for real-time tokens</div>
+    </div>
+    <div class="contrib-card">
+      <h4>🎨 Frontend</h4>
+      <div class="contrib-item">Built React + Vite SPA from scratch</div>
+      <div class="contrib-item">Implemented SSE streaming chat UI</div>
+      <div class="contrib-item">Designed RAG document upload page</div>
+      <div class="contrib-item">Built Research Agent results page with scores</div>
+      <div class="contrib-item">Global state via ChatContext</div>
+      <div class="contrib-item">CSS Modules for scoped styling</div>
+    </div>
+    <div class="contrib-card">
+      <h4>⚙️ DevOps & Design</h4>
+      <div class="contrib-item">Multi-stage Dockerfile (backend + frontend)</div>
+      <div class="contrib-item">docker-compose orchestration</div>
+      <div class="contrib-item">RotatingFileHandler logging system</div>
+      <div class="contrib-item">Centralised config via Pydantic settings</div>
+      <div class="contrib-item">Pinecone cloud vector database setup</div>
+      <div class="contrib-item">API proxy via Vite dev config</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════ SECTION 2: ARCHITECTURE ═══════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>System Architecture</h2>
+  </div>
+
+  <p>
+    NexusAI follows a clean 3-tier architecture: a React frontend communicates with a FastAPI
+    backend via REST and Server-Sent Events (SSE). The backend hosts three independent AI
+    subsystems, each backed by either SQLite (conversations) or Pinecone (vectors).
+  </p>
+
+  <div class="arch-box">┌─────────────────────────────────────────────────────────────┐
+│                  React + Vite Frontend                      │
+│     Home  │  Chat (SSE stream)  │  RAG  │  Research         │
+└───────────────────────┬─────────────────────────────────────┘
+                        │  REST + SSE
+┌───────────────────────▼─────────────────────────────────────┐
+│                    FastAPI Backend                           │
+│                                                             │
+│  ┌────────────────┐  ┌──────────────┐  ┌────────────────┐   │
+│  │   Chatbot      │  │     RAG      │  │  Multi-Agent   │   │
+│  │  LangGraph     │  │  Pinecone    │  │  Research +    │   │
+│  │  SqliteSaver   │  │  ingest +    │  │  Critic +      │   │
+│  │  Groq LLaMA    │  │  retrieve    │  │  Pipeline      │   │
+│  └────────────────┘  └──────────────┘  └────────────────┘   │
+│                                                             │
+│         Logger  │  Config (Pydantic)  │  Docker             │
+└────────┬──────────────────────────────────────┬─────────────┘
+         │                                      │
+┌────────▼──────────┐              ┌────────────▼────────────┐
+│  SQLite (global)  │              │   Pinecone (cloud)      │
+│  chatbot.db       │              │   384-dim vectors       │
+│  all features     │              │   cosine similarity     │
+└───────────────────┘              └─────────────────────────┘</div>
+
+  <h3>Key Design Decisions</h3>
+  <div class="decision-list">
+    <div class="decision">
+      <div class="decision-icon">📡</div>
+      <div class="decision-text">
+        <strong>SSE over WebSockets</strong>
+        <p>Server-Sent Events are one-directional, simpler, and work natively with FastAPI's <code>StreamingResponse</code>. No WebSocket handshake overhead needed for token streaming.</p>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">🧠</div>
+      <div class="decision-text">
+        <strong>SqliteSaver (LangGraph Memory)</strong>
+        <p>LangGraph's <code>SqliteSaver</code> handles all chat history automatically per <code>thread_id</code>. No manual DB writes needed — LangGraph loads and saves state around every node execution.</p>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">☁️</div>
+      <div class="decision-text">
+        <strong>Pinecone over FAISS</strong>
+        <p>Cloud-hosted vector database survives container restarts, scales to millions of vectors, and requires zero local disk management.</p>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">🔄</div>
+      <div class="decision-text">
+        <strong>Stream-then-Save pattern</strong>
+        <p>Messages are only persisted to SQLite after the full stream completes — never mid-stream — preventing partial/corrupted records in the database.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════ SECTION 3: HOW IT WORKS ══════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Working / Model Explanation</h2>
+  </div>
+
+  <!-- CHATBOT -->
+  <h3>💬 Feature 1 — Memory Chatbot (LangGraph)</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-label">Step 1</div>
+      <div class="flow-content">
+        <strong>User sends a message</strong>
+        <p>POST <code>/api/chat/stream</code> with <code>message</code> + <code>thread_id</code> UUID</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Step 2</div>
+      <div class="flow-content">
+        <strong>SqliteSaver loads history</strong>
+        <p>LangGraph reads the complete conversation history for this thread from <code>chatbot.db</code> automatically</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Step 3</div>
+      <div class="flow-content">
+        <strong>chat_node → Groq LLaMA 3.1</strong>
+        <p>History + new message sent to the LLM. Response tokens streamed back via SSE</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Step 4</div>
+      <div class="flow-content">
+        <strong>Stream completes → State saved</strong>
+        <p>Full response persisted to SQLite via SqliteSaver. Thread ready for next turn.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="file-label">chatbot/graph.py</span>
+<span class="cm"># Build LangGraph with SqliteSaver checkpointer</span>
+<span class="kw">def</span> <span class="fn">build_graph</span>():
+    graph = <span class="cl">StateGraph</span>(ChatState)
+
+    graph.add_node(<span class="str">"chat_node"</span>, chat_node)
+    graph.add_edge(START, <span class="str">"chat_node"</span>)
+    graph.add_edge(<span class="str">"chat_node"</span>, END)
+
+    compiled = graph.compile(checkpointer=checkpointer)  <span class="cm"># memory ✓</span>
+    <span class="kw">return</span> compiled
+  </div>
+
+  <!-- RAG -->
+  <h3>📄 Feature 2 — RAG (Retrieval-Augmented Generation)</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-label">Ingest</div>
+      <div class="flow-content">
+        <strong>Upload document → chunk → embed → Pinecone</strong>
+        <p>Document split into 500-char chunks (50 overlap). Each chunk embedded using HuggingFace <code>all-MiniLM-L6-v2</code> (384-dim, local, free). Vectors upserted to Pinecone.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Retrieve</div>
+      <div class="flow-content">
+        <strong>Query → embed → cosine search → top-K chunks</strong>
+        <p>User question is embedded with same model. Pinecone cosine similarity returns top 4 most relevant document chunks.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Generate</div>
+      <div class="flow-content">
+        <strong>Context + query → Groq LLaMA → grounded answer</strong>
+        <p>LLM instructed to answer ONLY from retrieved context. If no relevant chunks found — explicit "not found" message returned.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENT PIPELINE -->
+  <h3>🤖 Feature 3 — Multi-Agent Research Pipeline</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-label">Research Agent</div>
+      <div class="flow-content">
+        <strong>Tavily web search → structured summary</strong>
+        <p>Calls Tavily API for top 5 web results. LLM synthesises a cited summary with &lt;Research Summary&gt; + &lt;Sources Used&gt; sections.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Critic Agent</div>
+      <div class="flow-content">
+        <strong>Score on 4 axes → JSON verdict</strong>
+        <p>Evaluates Accuracy, Completeness, Clarity, Source Usage (each /10). Returns structured JSON with scores, verdict (PASS/FAIL), strengths, weaknesses, feedback.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-label">Pipeline Logic</div>
+      <div class="flow-content">
+        <strong>FAIL + retry loop (max 2×)</strong>
+        <p>If overall score &lt; 7, the pipeline refines the original query using critic feedback and re-runs Research → Critic. Returns final result with attempt count.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="file-label">agents/agent_pipeline.py</span>
+<span class="kw">while</span> attempt <span class="op">&lt;</span> MAX_RETRIES:         <span class="cm"># MAX_RETRIES = 2</span>
+    attempt += <span class="nm">1</span>
+
+    research_result = <span class="fn">run_research_agent</span>(query)   <span class="cm"># Step 1</span>
+    critic_result   = <span class="fn">run_critic_agent</span>(research_result)  <span class="cm"># Step 2</span>
+
+    <span class="kw">if</span> critic_result[<span class="str">"passed"</span>]:
+        <span class="kw">break</span>   <span class="cm"># PASS ✅</span>
+
+    <span class="cm"># FAIL → refine query with critic feedback</span>
+    feedback = critic_result[<span class="str">"critique"</span>].get(<span class="str">"feedback"</span>, <span class="str">""</span>)
+    query    = <span class="op">f</span><span class="str">"{query}. Focus especially on: {feedback}"</span>
+  </div>
+
+  <div class="callout">
+    <p>
+      <strong>Critic scoring schema (JSON):</strong> scores → {accuracy, completeness, clarity, source_usage},
+      overall_score (avg), verdict (PASS if ≥ 7), strengths[], weaknesses[], feedback (actionable improvement)
+    </p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════ SECTION 4: TECH STACK ════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Tech Stack &amp; Implementation Details</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technology</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="tag">LLM</span></td><td>Groq — LLaMA 3.1 8B Instant</td><td>Fast inference for all AI features</td></tr>
+      <tr><td><span class="tag">Orchestration</span></td><td>LangGraph</td><td>Stateful graph + automatic memory management</td></tr>
+      <tr><td><span class="tag">Vector DB</span></td><td>Pinecone (cloud, free tier)</td><td>Persistent 384-dim vector storage for RAG</td></tr>
+      <tr><td><span class="tag">Embeddings</span></td><td>HuggingFace all-MiniLM-L6-v2</td><td>Local, free sentence embeddings (no API cost)</td></tr>
+      <tr><td><span class="tag">Web Search</span></td><td>Tavily API</td><td>Real-time web retrieval for research agent</td></tr>
+      <tr><td><span class="tag">Backend</span></td><td>FastAPI + Python 3.12</td><td>REST + SSE streaming server</td></tr>
+      <tr><td><span class="tag">Memory</span></td><td>SQLite + SqliteSaver</td><td>Persistent chat history per thread</td></tr>
+      <tr><td><span class="tag">Frontend</span></td><td>React 18 + Vite + CSS Modules</td><td>Fast SPA with scoped styles</td></tr>
+      <tr><td><span class="tag">Streaming</span></td><td>Server-Sent Events (SSE)</td><td>Real-time token-by-token streaming to UI</td></tr>
+      <tr><td><span class="tag">Testing</span></td><td>Pytest + unittest.mock</td><td>37 tests — mocked APIs, no real keys needed</td></tr>
+      <tr><td><span class="tag">Logging</span></td><td>RotatingFileHandler (5MB × 3)</td><td>Structured logs, auto-rotated</td></tr>
+      <tr><td><span class="tag">Container</span></td><td>Docker (multi-stage) + docker-compose</td><td>One-command deployment</td></tr>
+    </tbody>
+  </table>
+
+  <h3>API Endpoints</h3>
+
+  <table>
+    <thead>
+      <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/chat</code></td><td>Chat — full response</td></tr>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/chat/stream</code></td><td>Chat — SSE token streaming (real-time)</td></tr>
+      <tr><td><span class="method-get">GET</span></td><td><code>/api/threads</code></td><td>List all conversation thread IDs</td></tr>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/rag/ingest</code></td><td>Upload + chunk + embed document into Pinecone</td></tr>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/rag</code></td><td>Ask question against ingested documents</td></tr>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/rag/stream</code></td><td>RAG answer — SSE streaming version</td></tr>
+      <tr><td><span class="method-post">POST</span></td><td><code>/api/research</code></td><td>Run full Research + Critic pipeline</td></tr>
+      <tr><td><span class="method-get">GET</span></td><td><code>/</code></td><td>Health check</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Project Structure</h3>
+
+  <div class="code-block">
+backend/app/
+├── main.py                  <span class="cm"># FastAPI app entry point + lifespan</span>
+├── api/
+│   ├── routes.py            <span class="cm"># All 8 API endpoints</span>
+│   └── schemas.py           <span class="cm"># Pydantic request/response models</span>
+├── chatbot/
+│   ├── state.py             <span class="cm"># ChatState TypedDict</span>
+│   ├── graph.py             <span class="cm"># LangGraph + SqliteSaver</span>
+│   ├── nodes.py             <span class="cm"># chat_node function</span>
+│   └── service.py           <span class="cm"># invoke + stream wrappers</span>
+├── rag/
+│   ├── ingest.py            <span class="cm"># Load → chunk → embed → Pinecone</span>
+│   ├── retriever.py         <span class="cm"># Pinecone similarity search</span>
+│   ├── rag_chain.py         <span class="cm"># LLM answers from context</span>
+│   └── rag_service.py       <span class="cm"># Public entry points</span>
+├── agents/
+│   ├── research_agent.py    <span class="cm"># Tavily + LLM synthesise</span>
+│   ├── critic_agent.py      <span class="cm"># Score /10 + JSON verdict</span>
+│   └── agent_pipeline.py    <span class="cm"># Research → Critic loop</span>
+├── database/sqlite_db.py    <span class="cm"># Shared SQLite helper</span>
+├── config/settings.py       <span class="cm"># Pydantic env var management</span>
+├── logger/logger.py         <span class="cm"># RotatingFileHandler</span>
+└── utils/helpers.py         <span class="cm"># Utilities: truncate, parse_json</span>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════ SECTION 5: RESULTS ═══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Implementation Results</h2>
+  </div>
+
+  <div class="results-grid">
+    <div class="result-card">
+      <span class="result-num">37</span>
+      <div class="result-label">Automated Tests Passing</div>
+    </div>
+    <div class="result-card">
+      <span class="result-num">4</span>
+      <div class="result-label">AI Features in One App</div>
+    </div>
+    <div class="result-card">
+      <span class="result-num">8</span>
+      <div class="result-label">REST + SSE Endpoints</div>
+    </div>
+    <div class="result-card">
+      <span class="result-num">384</span>
+      <div class="result-label">Vector Dimensions (Pinecone)</div>
+    </div>
+    <div class="result-card">
+      <span class="result-num">2×</span>
+      <div class="result-label">Agent Retry (Auto-Refinement)</div>
+    </div>
+    <div class="result-card">
+      <span class="result-num">0</span>
+      <div class="result-label">Secrets in Tests (All Mocked)</div>
+    </div>
+  </div>
+
+  <h3>What Was Achieved</h3>
+
+  <ul>
+    <li><strong>Full-stack production app</strong> — not a tutorial or notebook; a real, deployable application with clean separation of concerns</li>
+    <li><strong>True multi-agent self-critique loop</strong> — the Critic Agent drives automatic quality improvement, not just a single LLM call</li>
+    <li><strong>Real-time streaming</strong> — tokens arrive character-by-character in the React UI via SSE, just like ChatGPT</li>
+    <li><strong>Zero-cost local embeddings</strong> — HuggingFace model runs locally, no per-token embedding API cost</li>
+    <li><strong>Thread-safe memory</strong> — <code>check_same_thread=False</code> on SQLite connection handles FastAPI's concurrent request model</li>
+    <li><strong>Mocked test suite</strong> — all 37 tests run without any real API keys using <code>unittest.mock</code></li>
+    <li><strong>Docker-ready</strong> — multi-stage build; entire system starts with <code>docker compose up --build</code></li>
+  </ul>
+
+  <h3>How to Run Locally</h3>
+
+  <div class="code-block">
+<span class="cm"># 1. Clone and enter backend</span>
+git clone https://github.com/Nitesh-raghu45/nexusai.git
+<span class="kw">cd</span> nexusai/backend
+
+<span class="cm"># 2. Create virtual environment</span>
+python -m venv venv
+venv\Scripts\activate                       <span class="cm"># Windows</span>
+
+<span class="cm"># 3. Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="cm"># 4. Set API keys in .env</span>
+GROQ_API_KEY=...  PINECONE_API_KEY=...  TAVILY_API_KEY=...
+
+<span class="cm"># 5. Start backend</span>
+uvicorn app.main:app --reload               <span class="cm"># → localhost:8000</span>
+
+<span class="cm"># 6. Start frontend (separate terminal)</span>
+<span class="kw">cd</span> ../frontend && npm install && npm run dev  <span class="cm"># → localhost:3000</span>
+
+<span class="cm"># OR: Docker (one command for everything)</span>
+docker compose up --build
+  </div>
+
+  <h3>Running Tests</h3>
+
+  <div class="code-block">
+<span class="kw">cd</span> backend
+pytest              <span class="cm"># run all 37 tests</span>
+pytest -v           <span class="cm"># verbose output</span>
+pytest tests/test_api.py -v   <span class="cm"># single module</span>
+  </div>
+
+  <div class="callout">
+    <p>
+      <strong>All tests use mocks —</strong> no real API keys, no network calls, no cost.
+      Tests cover routes, RAG pipeline, chatbot service, agent pipeline, and database layer.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════════════════ -->
+<div class="footer">
+  <p><strong style="color:#fff">NexusAI</strong> — Full-Stack AI Platform &nbsp;|&nbsp;
+  LangGraph · FastAPI · Pinecone · Groq · React &nbsp;|&nbsp;
+  <span style="color:var(--accent)">github.com/Nitesh-raghu45</span></p>
+  <p style="margin-top:8px; font-size:11px">To save as PDF: open this file in Chrome → File → Print → Save as PDF &nbsp;|&nbsp; Use "Background graphics" option for full colour</p>
+</div>
+
+</body>
+</html>
