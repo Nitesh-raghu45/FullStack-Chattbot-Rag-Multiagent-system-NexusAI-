@@ -12,7 +12,7 @@ export default function RAG() {
   const [ingestResult, setIngestResult] = useState(null)
   const [query, setQuery]       = useState('')
   const [asking, setAsking]     = useState(false)
-  const [answer, setAnswer]     = useState(null)
+  const [answers, setAnswers]   = useState([])
   const [error, setError]       = useState(null)
   const fileRef                 = useRef(null)
   const dropRef                 = useRef(null)
@@ -50,12 +50,13 @@ export default function RAG() {
   // ── Ask ───────────────────────────────────────────────────────
   const handleAsk = async () => {
     if (!query.trim() || asking) return
+    const currentQuery = query.trim()
     setAsking(true)
     setError(null)
-    setAnswer(null)
+    setQuery('')          // clear input so user can type next question
     try {
-      const result = await askRag(query.trim(), threadId)
-      setAnswer(result)
+      const result = await askRag(currentQuery, threadId)
+      setAnswers(prev => [...prev, { question: currentQuery, ...result }])
     } catch (err) {
       setError(err.message)
     } finally {
@@ -170,26 +171,30 @@ export default function RAG() {
             </div>
           )}
 
-          {/* Answer */}
-          {answer && (
-            <div className={styles.answerCard}>
+          {/* Answer history */}
+          {answers.map((a, idx) => (
+            <div key={idx} className={styles.answerCard}>
+              <div className={styles.questionRow}>
+                <span className={styles.questionLabel}>Q</span>
+                <span className={styles.questionText}>{a.question}</span>
+              </div>
               <div className={styles.answerHeader}>
                 <span className={styles.answerIcon}>◆</span>
                 <span className={styles.answerLabel}>Answer</span>
               </div>
               <div className={styles.answerBody}>
-                <ReactMarkdown>{answer.answer}</ReactMarkdown>
+                <ReactMarkdown>{a.answer}</ReactMarkdown>
               </div>
-              {answer.sources?.length > 0 && (
+              {a.sources?.length > 0 && (
                 <div className={styles.sources}>
                   <p className={styles.sourcesLabel}>Sources</p>
-                  {answer.sources.map((s, i) => (
+                  {a.sources.map((s, i) => (
                     <span key={i} className={styles.sourceTag}>{s}</span>
                   ))}
                 </div>
               )}
             </div>
-          )}
+          ))}
         </div>
 
       </div>

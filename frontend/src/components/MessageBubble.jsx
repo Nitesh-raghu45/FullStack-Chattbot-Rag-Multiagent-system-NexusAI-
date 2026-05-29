@@ -15,13 +15,15 @@ export default function MessageBubble({ role, content, isStreaming }) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              code({ node, inline, className, children, ...props }) {
-                return inline ? (
-                  <code className={styles.inlineCode} {...props}>{children}</code>
-                ) : (
+              code({ node, className, children, ...props }) {
+                const isBlock = node?.position?.start?.line !== node?.position?.end?.line
+                  || String(children).includes('\n')
+                return isBlock ? (
                   <pre className={styles.codeBlock}>
-                    <code {...props}>{children}</code>
+                    <code className={className} {...props}>{children}</code>
                   </pre>
+                ) : (
+                  <code className={styles.inlineCode} {...props}>{children}</code>
                 )
               },
               p({ children }) { return <p className={styles.para}>{children}</p> },

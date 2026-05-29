@@ -22,11 +22,19 @@ llm = ChatGroq(
 )
 
 # ── System prompt ──────────────────────────────────────────────────────────
-RESEARCH_SYSTEM_PROMPT = """You are an expert research assistant.
+RESEARCH_SYSTEM_PROMPT = """You are an expert research assistant with access to real-time web search results.
+
+CRITICAL RULES:
+1. The web search results provided to you are LIVE data — they are MORE RECENT and MORE ACCURATE than your training data.
+2. ALWAYS trust the web search results over your internal knowledge or training cutoff.
+3. If the search results contain the answer, state it confidently and cite the source.
+4. Do NOT say "my training data only goes up to X" — the search results override that limitation.
+5. Only say information is unavailable if the search results genuinely contain no relevant data.
+
 Your job is to:
 1. Analyse the user's query carefully.
-2. Use the web search results provided to you.
-3. Synthesise a clear, factual, well-structured answer.
+2. Use the web search results provided to you as your primary source of truth.
+3. Synthesise a clear, factual, well-structured answer based on those results.
 4. Always cite which search result supports each key point.
 5. Be concise — no padding, no repetition.
 
@@ -63,7 +71,20 @@ def run_research_agent(query: str) -> dict:
 
     # ── Step 1: Web search ─────────────────────────────────────────────────
     try:
-        search_results: list[dict] = search_tool.invoke(query)
+        raw = search_tool.invoke(query)
+
+        # langchain-tavily 0.2.x returns the full Tavily API response as a dict:
+        # { "query": ..., "answer": ..., "results": [...], "images": [...], ... }
+        # The actual search hits are nested inside "results".
+        tavily_direct_answer = ""
+        if isinstance(raw, dict):
+            tavily_direct_answer = raw.get("answer", "") or ""
+            search_results = raw.get("results", [])
+        elif isinstance(raw, list):
+            search_results = raw
+        else:
+            search_results = []
+
         logger.info(f"[research_agent] Got {len(search_results)} results.")
     except Exception as e:
         logger.error(f"[research_agent] Search error: {e}")
@@ -71,6 +92,10 @@ def run_research_agent(query: str) -> dict:
 
     # ── Step 2: Format results as readable context ─────────────────────────
     context_block = _format_results(search_results)
+
+    # Prepend Tavily's own direct answer if available — it's highly accurate
+    if tavily_direct_answer:
+        context_block = f"[Tavily Direct Answer]: {tavily_direct_answer}\n\n" + context_block
 
     # ── Step 3: LLM synthesis ──────────────────────────────────────────────
     messages = [
@@ -98,22 +123,25 @@ def run_research_agent(query: str) -> dict:
 
 
 # ── Helper ─────────────────────────────────────────────────────────────────
-def _format_results(results: list[dict]) -> str:
+def _format_results(results: list) -> str:
     """
-    Convert Tavily result dicts into a numbered, readable string block
-    that fits neatly into the LLM prompt.
+    Convert Tavily result dicts OR strings into a numbered, readable string block.
 
-    Each result dict from Tavily has keys: url, content, title, score.
+    In langchain-tavily >= 0.2, results may be list[str] or list[dict].
     """
     lines = []
     for i, r in enumerate(results, start=1):
-        title   = r.get("title",   "No title")
-        url     = r.get("url",     "No URL")
-        content = r.get("content", "").strip()
-
-        lines.append(
-            f"[{i}] {title}\n"
-            f"     URL: {url}\n"
-            f"     Snippet: {truncate_text(content, max_chars=400)}"
-        )
+        if isinstance(r, dict):
+            title   = r.get("title",   "No title")
+            url     = r.get("url",     "No URL")
+            content = r.get("content", "").strip()
+            lines.append(
+                f"[{i}] {title}\n"
+                f"     URL: {url}\n"
+                f"     Snippet: {truncate_text(content, max_chars=400)}"
+            )
+        elif isinstance(r, str):
+            lines.append(f"[{i}] {truncate_text(r, max_chars=400)}")
+        else:
+            lines.append(f"[{i}] {truncate_text(str(r), max_chars=400)}")
     return "\n\n".join(lines)

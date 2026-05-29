@@ -21,8 +21,9 @@
   font-size: 13px;
   line-height: 1.6;
   color: #e0e0e0;
+  white-space: pre;
 }
-.codeBlock code { background: none; padding: 0; color: inherit; }
+.codeBlock code { background: none; padding: 0; color: inherit; white-space: pre; }
 
 .ul  { padding-left: 22px; margin: 8px 0; list-style: disc; }
 .ol  { padding-left: 22px; margin: 8px 0; list-style: decimal; }

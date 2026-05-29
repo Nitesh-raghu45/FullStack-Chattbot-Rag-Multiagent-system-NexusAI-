@@ -73,7 +73,7 @@ def run_critic_agent(research_output: dict) -> dict:
 
     # ── Build source reference string ─────────────────────────────────────
     source_refs = "\n".join(
-        f"  [{i+1}] {r.get('url', 'N/A')}"
+        f"  [{i+1}] {r.get('url', 'N/A') if isinstance(r, dict) else str(r)[:200]}"
         for i, r in enumerate(sources)
     )
 

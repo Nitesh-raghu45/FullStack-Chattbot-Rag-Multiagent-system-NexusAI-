@@ -7,17 +7,18 @@ import styles from './Research.module.css'
 export default function Research() {
   const [query,    setQuery]   = useState('')
   const [loading,  setLoading] = useState(false)
-  const [result,   setResult]  = useState(null)
+  const [results,  setResults] = useState([])   // history of all research results
   const [error,    setError]   = useState(null)
 
   const handleResearch = async () => {
     if (!query.trim() || loading) return
+    const currentQuery = query.trim()
     setLoading(true)
     setError(null)
-    setResult(null)
+    setQuery('')          // clear input for next question
     try {
-      const data = await runResearch(query.trim())
-      setResult(data)
+      const data = await runResearch(currentQuery)
+      setResults(prev => [...prev, { query: currentQuery, ...data }])
     } catch (err) {
       setError(err.message)
     } finally {
@@ -93,23 +94,30 @@ export default function Research() {
           <div className={styles.errorBanner}>⚠ {error}</div>
         )}
 
-        {result && (
-          <div className={styles.results}>
+        {/* Research history — newest at bottom */}
+        {results.map((item, idx) => (
+          <div key={idx} className={styles.results}>
+
+            {/* Query label */}
+            <div className={styles.queryLabel}>
+              <span className={styles.queryBadge}>Q</span>
+              <span className={styles.queryText}>{item.query}</span>
+            </div>
 
             {/* Summary */}
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <span className={styles.cardIcon}>◆</span>
                 <span className={styles.cardTitle}>Research Summary</span>
-                <span className={`${styles.verdict} ${result.passed ? styles.verdictPass : styles.verdictFail}`}>
-                  {result.passed ? '✓ PASS' : '✗ FAIL'}
+                <span className={`${styles.verdict} ${item.passed ? styles.verdictPass : styles.verdictFail}`}>
+                  {item.passed ? '✓ PASS' : '✗ FAIL'}
                 </span>
-                {result.attempts > 1 && (
-                  <span className={styles.attempts}>{result.attempts} attempts</span>
+                {item.attempts > 1 && (
+                  <span className={styles.attempts}>{item.attempts} attempts</span>
                 )}
               </div>
               <div className={styles.cardBody}>
-                <ReactMarkdown>{result.summary}</ReactMarkdown>
+                <ReactMarkdown>{item.summary}</ReactMarkdown>
               </div>
             </div>
 
@@ -118,14 +126,13 @@ export default function Research() {
               <div className={styles.cardHeader}>
                 <span className={styles.cardIcon}>⊹</span>
                 <span className={styles.cardTitle}>Quality Critique</span>
-                <span className={`${styles.overallScore} ${scoreColor(result.critique.overall_score)}`}>
-                  {result.critique.overall_score}/10
+                <span className={`${styles.overallScore} ${scoreColor(item.critique.overall_score)}`}>
+                  {item.critique.overall_score}/10
                 </span>
               </div>
               <div className={styles.cardBody}>
-                {/* Score bars */}
                 <div className={styles.scores}>
-                  {Object.entries(result.critique.scores).map(([key, val]) => (
+                  {Object.entries(item.critique.scores).map(([key, val]) => (
                     <div key={key} className={styles.scoreRow}>
                       <span className={styles.scoreKey}>{key.replace('_', ' ')}</span>
                       <div className={styles.scoreBar}>
@@ -138,27 +145,23 @@ export default function Research() {
                     </div>
                   ))}
                 </div>
-
-                {/* Feedback */}
                 <div className={styles.feedback}>
                   <p className={styles.feedbackLabel}>Feedback</p>
-                  <p className={styles.feedbackText}>{result.critique.feedback}</p>
+                  <p className={styles.feedbackText}>{item.critique.feedback}</p>
                 </div>
-
-                {/* Strengths & weaknesses */}
                 <div className={styles.swRow}>
-                  {result.critique.strengths?.length > 0 && (
+                  {item.critique.strengths?.length > 0 && (
                     <div className={styles.swBox}>
                       <p className={styles.swLabel}>Strengths</p>
-                      {result.critique.strengths.map((s, i) => (
+                      {item.critique.strengths.map((s, i) => (
                         <p key={i} className={styles.swItem}>+ {s}</p>
                       ))}
                     </div>
                   )}
-                  {result.critique.weaknesses?.length > 0 && (
+                  {item.critique.weaknesses?.length > 0 && (
                     <div className={styles.swBox}>
                       <p className={styles.swLabel}>Weaknesses</p>
-                      {result.critique.weaknesses.map((w, i) => (
+                      {item.critique.weaknesses.map((w, i) => (
                         <p key={i} className={styles.swItem}>− {w}</p>
                       ))}
                     </div>
@@ -168,7 +171,7 @@ export default function Research() {
             </div>
 
           </div>
-        )}
+        ))}
       </div>
     </div>
   )

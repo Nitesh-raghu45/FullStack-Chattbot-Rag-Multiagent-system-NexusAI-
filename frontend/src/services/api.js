@@ -31,9 +31,13 @@ export async function* streamMessage(message, threadId) {
     const text = decoder.decode(value)
     const lines = text.split('\n').filter(l => l.startsWith('data: '))
     for (const line of lines) {
-      const chunk = line.replace('data: ', '')
-      if (chunk === '[DONE]' || chunk === '') continue
-      yield chunk
+      const raw = line.slice('data: '.length).trim()
+      if (raw === '[DONE]' || raw === '') continue
+      try {
+        yield JSON.parse(raw)   // decode escaped newlines (\n → actual newline)
+      } catch {
+        yield raw               // fallback: yield as-is if not valid JSON
+      }
     }
   }
 }

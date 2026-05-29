@@ -1,5 +1,6 @@
 # backend/app/api/routes.py
 
+import json
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import StreamingResponse
 from app.api.schemas import (
@@ -40,11 +41,11 @@ def chat_stream(data: ChatRequest):
     def event_generator():
         try:
             for chunk in stream_chat_response(data.message, data.thread_id):
-                yield f"data: {chunk}\n\n"
+                yield f"data: {json.dumps(chunk)}\n\n"
             yield "data: [DONE]\n\n"
         except Exception as e:
             logger.error(f"[routes] /chat/stream error: {e}")
-            yield f"data: [ERROR] {str(e)}\n\n"
+            yield f"data: [ERROR] {json.dumps(str(e))}\n\n"
 
     return StreamingResponse(
         event_generator(),
@@ -87,13 +88,13 @@ def rag_stream(data: RAGRequest):
     def event_generator():
         try:
             for chunk in rag_stream_response(data.query):
-                yield f"data: {chunk}\n\n"
+                yield f"data: {json.dumps(chunk)}\n\n"
             yield "data: [DONE]\n\n"
         except FileNotFoundError as e:
-            yield f"data: [ERROR] {str(e)}\n\n"
+            yield f"data: [ERROR] {json.dumps(str(e))}\n\n"
         except Exception as e:
             logger.error(f"[routes] /rag/stream error: {e}")
-            yield f"data: [ERROR] {str(e)}\n\n"
+            yield f"data: [ERROR] {json.dumps(str(e))}\n\n"
 
     return StreamingResponse(
         event_generator(),
