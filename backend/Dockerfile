@@ -32,10 +32,12 @@ RUN pip install --upgrade pip && \
 # Baking the model into the image means:
 #   - No HF network download at container startup (faster cold starts)
 #   - No "unauthenticated requests" rate-limit warnings
-#   - No OOM from downloading + loading simultaneously at runtime
+# NOTE: sentence-transformers uses HF_HOME, NOT TRANSFORMERS_CACHE.
+#       We mkdir explicitly so the path exists before the download runs.
 ENV PYTHONPATH=/install/lib/python3.10/site-packages
-ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
+ENV HF_HOME=/app/.cache/huggingface
+RUN mkdir -p /app/.cache/huggingface && \
+    python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -71,7 +73,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     PORT=8000 \
-    TRANSFORMERS_CACHE=/app/.cache/huggingface \
     HF_HOME=/app/.cache/huggingface
 
 # Expose the port uvicorn listens on
