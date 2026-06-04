@@ -1,6 +1,9 @@
 // frontend/src/services/api.js
-
-const BASE = '/api'
+// In production (Render), VITE_API_URL is set to the backend service URL.
+// In local dev, falls back to '/api' which Vite proxies to localhost:8000.
+const BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api'
 
 // ── Chat ──────────────────────────────────────────────────────────
 export async function sendMessage(message, threadId) {

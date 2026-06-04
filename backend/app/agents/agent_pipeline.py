@@ -43,7 +43,7 @@ def run_agent_pipeline(query: str) -> dict:
         critic_result = run_critic_agent(research_result)
 
         if critic_result["passed"]:
-            logger.info(f"[pipeline] PASSED on attempt {attempt}. ✅")
+            logger.info(f"[pipeline] PASSED on attempt {attempt}.")
             break
 
         logger.warning(

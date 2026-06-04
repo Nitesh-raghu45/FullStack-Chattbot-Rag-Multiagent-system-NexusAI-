@@ -17,3 +17,4 @@ tavily-python
 pytest
 pytest-asyncio
 httpx
+langchain_tavily

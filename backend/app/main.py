@@ -1,5 +1,6 @@
 # backend/app/main.py
 
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +22,16 @@ app = FastAPI(title="AI Chatbot with RAG", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    # ALLOWED_ORIGINS env var: comma-separated list of allowed origins.
+    # e.g. "https://my-frontend.onrender.com,http://localhost:5173"
+    allow_origins=[
+        o.strip()
+        for o in os.getenv(
+            "ALLOWED_ORIGINS",
+            "http://localhost:5173,http://localhost:3000",
+        ).split(",")
+        if o.strip()
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )

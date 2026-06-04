@@ -1,8 +1,6 @@
 <h1 align="center">NexusAI — Full-Stack AI Platform</h1>
 
 
-
-
 # A production-grade AI application with a memory-persistent chatbot, document Q&A (RAG), and a self-critiquing research agent — built with LangGraph, FastAPI, Pinecone, and React.
 
 ---
@@ -23,29 +21,29 @@ NexusAI gives you four AI capabilities in one unified interface:
 ## System Architecture
 
 ```
-                                      ┌─────────────────────────────────────────────────┐
-                                      │              React + Vite Frontend              │
-                                      │   Home  │  Chat (SSE)  │  RAG  │  Research      │
-                                      └────────────────────┬────────────────────────────┘
-                                                           │ REST + SSE
-                                      ┌────────────────────▼────────────────────────────┐
-                                      │              FastAPI Backend                    │
-                                      │                                                 │
-                                      │  ┌──────────────┐ ┌──────────┐ ┌─────────────┐  │
-                                      │  │   Chatbot    │ │   RAG    │ │   Agents    │  │
-                                      │  │  LangGraph   │ │ Pinecone │ │ Research +  │  │
-                                      │  │  SqliteSaver │ │ ingest + │ │   Critic    │  │
-                                      │  │  Groq LLaMA  │ │ retrieve │ │   Tavily    │  │
-                                      │  └──────────────┘ └──────────┘ └─────────────┘  │
-                                      │                                                 │
-                                      │         Logger  │  Config  │  Docker            │
-                                      └────────┬─────────────────────────┬──────────────┘
-                                               │                         │
-                                      ┌────────▼──────────┐  ┌──────────▼──────────────┐
-                                      │  SQLite (global)  │  │   Pinecone (cloud)      │
-                                      │  chatbot.db       │  │   384-dim vectors       │
-                                      │  all features     │  │   cosine similarity     │
-                                      └───────────────────┘  └─────────────────────────┘
+                        ┌─────────────────────────────────────────────────┐
+                        │              React + Vite Frontend              │
+                        │   Home  │  Chat (SSE)  │  RAG  │  Research      │
+                        └────────────────────┬────────────────────────────┘
+                                             │ REST + SSE
+                        ┌────────────────────▼────────────────────────────┐
+                        │              FastAPI Backend                    │
+                        │                                                 │
+                        │  ┌──────────────┐ ┌──────────┐ ┌─────────────┐  │
+                        │  │   Chatbot    │ │   RAG    │ │   Agents    │  │
+                        │  │  LangGraph   │ │ Pinecone │ │ Research +  │  │
+                        │  │  SqliteSaver │ │ ingest + │ │   Critic    │  │
+                        │  │  Groq LLaMA  │ │ retrieve │ │   Tavily    │  │
+                        │  └──────────────┘ └──────────┘ └─────────────┘  │
+                        │                                                 │
+                        │         Logger  │  Config  │  Docker            │
+                        └────────┬────────────────────────┬──────────────-┘
+                                 │                        │
+                        ┌────────▼──────────┐  ┌──────────▼──────────────┐
+                        │  SQLite (global)  │  │   Pinecone (cloud)      │
+                        │  chatbot.db       │  │   384-dim vectors       │
+                        │  all features     │  │   cosine similarity     │
+                        └───────────────────┘  └─────────────────────────┘
 ```
 
 ---
