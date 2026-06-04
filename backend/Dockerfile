@@ -45,10 +45,10 @@ COPY --from=builder /install /usr/local
 # Copy application source code
 COPY --chown=appuser:appuser . .
 
-# Create directories the app writes to at runtime
-# (logs/ and vectorstore/ and data/ must exist inside container)
+# Create directories the app writes to at runtime and fix ownership of /app
+# WORKDIR creates /app as root — appuser needs write access to create chatbot.db
 RUN mkdir -p logs vectorstore data/raw data/processed && \
-    chown -R appuser:appuser logs vectorstore data
+    chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser

@@ -15,7 +15,9 @@ class Settings:
     GROQ_MODEL: str   = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
     # SQLite — global shared DB for all features
-    SQLITE_DB_PATH: str = os.getenv("SQLITE_DB_PATH", "chatbot.db")
+    # Default to /app/data/chatbot.db (absolute path, created by Dockerfile).
+    # Override via SQLITE_DB_PATH env var in Render/docker-compose if needed.
+    SQLITE_DB_PATH: str = os.getenv("SQLITE_DB_PATH", "/app/data/chatbot.db")
 
     # Pinecone (replaces FAISS)
     PINECONE_API_KEY:    str = os.getenv("PINECONE_API_KEY", "")
