@@ -4,11 +4,10 @@ pydantic
 langchain
 langchain-groq
 langchain-community
-langchain-huggingface
 langgraph
 langgraph-checkpoint-sqlite
 pinecone
-sentence-transformers
+fastembed
 pypdf
 docx2txt
 python-multipart

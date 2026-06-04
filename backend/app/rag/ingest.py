@@ -16,19 +16,18 @@ LOADERS = {
 
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 
-# ── Deep lazy singleton — import AND model both deferred to first ingest call ──
+# ── Deep lazy singleton — loads on FIRST ingest call, not at startup ────────
 _embeddings = None
 
 def get_embeddings():
     global _embeddings
     if _embeddings is None:
-        from langchain_huggingface import HuggingFaceEmbeddings  # deferred import
-        logger.info("[ingest] Loading embedding model (first ingest)...")
-        _embeddings = HuggingFaceEmbeddings(
-            model_name=settings.EMBEDDING_MODEL,
-            model_kwargs={"device": "cpu"},
+        from langchain_community.embeddings import FastEmbedEmbeddings  # deferred import
+        logger.info("[ingest] Loading FastEmbed model (first ingest)...")
+        _embeddings = FastEmbedEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
         )
-        logger.info("[ingest] Embedding model loaded.")
+        logger.info("[ingest] FastEmbed model loaded.")
     return _embeddings
 
 
