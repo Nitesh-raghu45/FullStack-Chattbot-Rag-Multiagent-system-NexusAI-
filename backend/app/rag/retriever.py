@@ -1,18 +1,19 @@
 # backend/app/rag/retriever.py
 
 from pinecone import Pinecone
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from app.config.settings import settings
 from app.logger.logger import logger
 
-# ── Lazy singleton — model loads on FIRST request, not at startup ───────────
-# Loading sentence-transformers at import time OOMs Render's 512MB free tier.
+# ── Deep lazy singleton — import AND model both deferred to first RAG call ───
+# Even importing langchain_huggingface triggers torch initialization (~150MB).
+# Moving the import inside the function keeps startup RAM under 512MB free tier.
 _embeddings = None
 
-def get_embeddings() -> HuggingFaceEmbeddings:
+def get_embeddings():
     global _embeddings
     if _embeddings is None:
+        from langchain_huggingface import HuggingFaceEmbeddings  # deferred import
         logger.info("[retriever] Loading embedding model (first request)...")
         _embeddings = HuggingFaceEmbeddings(
             model_name=settings.EMBEDDING_MODEL,

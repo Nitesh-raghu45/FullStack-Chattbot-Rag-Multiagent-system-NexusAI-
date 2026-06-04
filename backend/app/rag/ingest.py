@@ -3,7 +3,6 @@
 import os
 from langchain_community.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
 from pinecone import Pinecone, ServerlessSpec
 from app.config.settings import settings
 from app.logger.logger import logger
@@ -17,12 +16,13 @@ LOADERS = {
 
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 
-# ── Lazy singleton — model loads on FIRST ingest, not at startup ──────────
+# ── Deep lazy singleton — import AND model both deferred to first ingest call ──
 _embeddings = None
 
-def get_embeddings() -> HuggingFaceEmbeddings:
+def get_embeddings():
     global _embeddings
     if _embeddings is None:
+        from langchain_huggingface import HuggingFaceEmbeddings  # deferred import
         logger.info("[ingest] Loading embedding model (first ingest)...")
         _embeddings = HuggingFaceEmbeddings(
             model_name=settings.EMBEDDING_MODEL,
