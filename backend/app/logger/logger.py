@@ -5,7 +5,11 @@ import os
 from logging.handlers import RotatingFileHandler
 
 # ── Config ─────────────────────────────────────────────────────────────────
-LOG_DIR  = os.path.join(os.path.dirname(__file__), "../../../logs")
+# Use LOG_DIR env var if set; otherwise default to /app/logs (absolute path).
+# NOTE: The old "../../../logs" relative path resolved to the filesystem root
+#       inside Docker (/app/app/logger/../../../logs → /logs) causing a
+#       PermissionError. Always use an absolute path in containers.
+LOG_DIR  = os.environ.get("LOG_DIR", os.path.join("/app", "logs"))
 LOG_FILE = os.path.join(LOG_DIR, "app.log")
 
 os.makedirs(LOG_DIR, exist_ok=True)
