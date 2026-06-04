@@ -18,7 +18,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # and won't re-run pip install unless requirements.txt changes
 COPY requirements.txt .
 
+# ── IMPORTANT: install CPU-only torch FIRST ────────────────────────────────
+# sentence-transformers depends on torch. Without this step, pip resolves
+# torch from PyPI and pulls the full CUDA build (~1.5 GB of GPU libraries
+# that are completely useless on Render/CPU-only servers).
+# Installing the CPU wheel first satisfies the torch dependency cheaply.
 RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --prefix=/install \
+        torch --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 
