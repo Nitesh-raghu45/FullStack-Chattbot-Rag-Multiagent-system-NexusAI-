@@ -28,6 +28,15 @@ RUN pip install --upgrade pip && \
         torch --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir --prefix=/install -r requirements.txt
 
+# ── Pre-download the HuggingFace embedding model into the image ─────────────
+# Baking the model into the image means:
+#   - No HF network download at container startup (faster cold starts)
+#   - No "unauthenticated requests" rate-limit warnings
+#   - No OOM from downloading + loading simultaneously at runtime
+ENV PYTHONPATH=/install/lib/python3.10/site-packages
+ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Stage 2 — final runtime image (slim, no build tools)
@@ -41,6 +50,10 @@ WORKDIR /app
 
 # Copy installed packages from builder stage
 COPY --from=builder /install /usr/local
+
+# Copy pre-downloaded HuggingFace model cache from builder
+# (avoids downloading at runtime — no HF network calls at startup)
+COPY --from=builder /app/.cache /app/.cache
 
 # Copy application source code
 COPY --chown=appuser:appuser . .
@@ -57,7 +70,9 @@ USER appuser
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    PORT=8000
+    PORT=8000 \
+    TRANSFORMERS_CACHE=/app/.cache/huggingface \
+    HF_HOME=/app/.cache/huggingface
 
 # Expose the port uvicorn listens on
 EXPOSE 8000

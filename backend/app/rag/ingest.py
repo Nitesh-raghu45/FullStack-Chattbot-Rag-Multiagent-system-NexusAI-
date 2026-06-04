@@ -17,10 +17,19 @@ LOADERS = {
 
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 
-embeddings = HuggingFaceEmbeddings(
-    model_name=settings.EMBEDDING_MODEL,
-    model_kwargs={"device": "cpu"},
-)
+# ── Lazy singleton — model loads on FIRST ingest, not at startup ──────────
+_embeddings = None
+
+def get_embeddings() -> HuggingFaceEmbeddings:
+    global _embeddings
+    if _embeddings is None:
+        logger.info("[ingest] Loading embedding model (first ingest)...")
+        _embeddings = HuggingFaceEmbeddings(
+            model_name=settings.EMBEDDING_MODEL,
+            model_kwargs={"device": "cpu"},
+        )
+        logger.info("[ingest] Embedding model loaded.")
+    return _embeddings
 
 
 def _get_pinecone_index():
@@ -64,7 +73,7 @@ def ingest_document(file_path: str) -> int:
     # Build vectors for Pinecone upsert
     vectors = []
     for i, chunk in enumerate(chunks):
-        vector = embeddings.embed_query(chunk.page_content)
+        vector = get_embeddings().embed_query(chunk.page_content)
         vectors.append({
             "id":       f"{os.path.basename(file_path)}-{i}",
             "values":   vector,

@@ -6,11 +6,20 @@ from langchain_core.documents import Document
 from app.config.settings import settings
 from app.logger.logger import logger
 
+# ── Lazy singleton — model loads on FIRST request, not at startup ───────────
+# Loading sentence-transformers at import time OOMs Render's 512MB free tier.
+_embeddings = None
 
-embeddings = HuggingFaceEmbeddings(
-    model_name=settings.EMBEDDING_MODEL,
-    model_kwargs={"device": "cpu"},
-)
+def get_embeddings() -> HuggingFaceEmbeddings:
+    global _embeddings
+    if _embeddings is None:
+        logger.info("[retriever] Loading embedding model (first request)...")
+        _embeddings = HuggingFaceEmbeddings(
+            model_name=settings.EMBEDDING_MODEL,
+            model_kwargs={"device": "cpu"},
+        )
+        logger.info("[retriever] Embedding model loaded.")
+    return _embeddings
 
 
 def retrieve_chunks(query: str, k: int = None) -> list[Document]:
@@ -25,7 +34,7 @@ def retrieve_chunks(query: str, k: int = None) -> list[Document]:
     pc    = Pinecone(api_key=settings.PINECONE_API_KEY)
     index = pc.Index(settings.PINECONE_INDEX_NAME)
 
-    query_vector = embeddings.embed_query(query)
+    query_vector = get_embeddings().embed_query(query)
 
     results = index.query(
         vector=query_vector,
